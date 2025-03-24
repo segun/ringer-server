@@ -31,6 +31,10 @@ export class UserService {
     return null;
   }
 
+  async getUserByEmailOrPhone(emailOrPhone: string): Promise<User | null> {
+    return await this.dbService.getUserByEmailOrPhone(emailOrPhone);
+  }
+
   private hashPasscode(passcode: string): string {
     return crypto.createHash('sha256').update(passcode).digest('hex');
   }
@@ -38,5 +42,5 @@ export class UserService {
   private comparePasscodes(plainPasscode: string, hashedPasscode: string): boolean {
     const hashedInput = this.hashPasscode(plainPasscode);
     return hashedInput === hashedPasscode;
-  }
+  }  
 }

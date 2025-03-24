@@ -10,7 +10,7 @@ export class UserController {
     @Post('register')
     async register(@Body() registerRequest: RegisterRequest) {
         const { emailOrPhone, passcode, location, manualLocation } = registerRequest;
-        const existingUser = await this.userService.findUserByEmailOrPhone(emailOrPhone);
+        const existingUser = await this.userService.getUserByEmailOrPhone(emailOrPhone);
         if (existingUser) {
             throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
         }
