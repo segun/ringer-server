@@ -45,6 +45,7 @@ export class UserController {
                 status: result 
             };
         } catch (error) {
+            console.error(error);
             throw new HttpException(
                 error.message || 'Failed to update charging status', 
                 HttpStatus.BAD_REQUEST

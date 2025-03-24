@@ -87,9 +87,10 @@ export async function getUserChargingStatuses(userId: string): Promise<ChargingS
 export async function addChargingStatus(chargingStatus: ChargingStatus) {
     chargingStatus.id = id();
 
+    console.log("Adding charging status", chargingStatus);
+
     await instaServer.transact([
-        tx.chargingStatus[chargingStatus.id].update(chargingStatus),
-        tx.user[chargingStatus.userId].link({ chargingStatus: chargingStatus.id })
+        tx.chargingStatus[chargingStatus.id].update(chargingStatus).link({ user: chargingStatus.userId }),
     ]);
 
     return chargingStatus;
