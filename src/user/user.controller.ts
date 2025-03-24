@@ -2,11 +2,10 @@ import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/commo
 import { UserService } from './user.service';
 import { RegisterRequest } from "./dto/register-request.dto";
 import { LoginRequest } from "./dto/login-request.dto";
-import { ChargingStatusRequest } from "./dto/charging-status-request.dto";
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @Post('register')
     async register(@Body() registerRequest: RegisterRequest) {
@@ -15,7 +14,7 @@ export class UserController {
         if (existingUser) {
             throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
         }
-        const user = await this.userService.register(emailOrPhone, passcode, location, manualLocation);
+        const user = await this.userService.register({ emailOrPhone, passcode, location, manualLocation });
         return { message: 'Registration successful', user };
     }
 
@@ -27,29 +26,5 @@ export class UserController {
             throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
         }
         return { message: 'Login successful', user };
-    }
-
-    @Post('charging-status')
-    async updateChargingStatus(@Body() chargingStatusRequest: ChargingStatusRequest) {
-        const { userId, isPluggedIn, userLocation, manualLocation } = chargingStatusRequest;
-        
-        try {
-            const result = await this.userService.updateChargingStatus(
-                userId, 
-                isPluggedIn, 
-                userLocation, 
-                manualLocation
-            );
-            return { 
-                message: 'Charging status updated successfully', 
-                status: result 
-            };
-        } catch (error) {
-            console.error(error);
-            throw new HttpException(
-                error.message || 'Failed to update charging status', 
-                HttpStatus.BAD_REQUEST
-            );
-        }
     }
 }
