@@ -70,9 +70,9 @@ export async function addChargingStatus(chargingStatus: ChargingStatus) {
     // Query the latest charging status for the user
     const latestStatusResponse = await instaServer.query({
         chargingStatus: {
-            $: { 
+            $: {
                 where: { userId: chargingStatus.userId },
-                orderBy: { statusTime: 'desc' },
+                order: { statusTime: 'desc' },
                 limit: 1
             }
         }
@@ -94,27 +94,32 @@ export async function addChargingStatus(chargingStatus: ChargingStatus) {
 }
 
 export async function getChargingStatusesByDateRange({ userId, startDate, endDate }: { userId: string, startDate: number, endDate: number }): Promise<ChargingStatus[]> {
-    const chargingStatusQueryResponse = await instaServer.query({
-        chargingStatus: {
-            $: {
-                where: {
-                    userId,
-                    statusTime: {
-                        $gte: startDate,
-                        $lte: endDate
+    try {
+        const chargingStatusQueryResponse = await instaServer.query({
+            chargingStatus: {
+                $: {
+                    where: {
+                        userId,
+                        statusTime: {
+                            $gte: startDate,
+                            $lte: endDate
+                        }
+                    },
+                    order: {
+                        statusTime: 'asc'
                     }
                 },
-                orderBy: {
-                    statusTime: 'asc'
-                }
-            },
-            user: {}
-        }
-    } as InstaQLParams<SchemaType>);
+                user: {}
+            }
+        } as InstaQLParams<SchemaType>);
 
-    if (chargingStatusQueryResponse && chargingStatusQueryResponse.chargingStatus && chargingStatusQueryResponse.chargingStatus.length > 0) {
-        return chargingStatusQueryResponse.chargingStatus;
+        if (chargingStatusQueryResponse && chargingStatusQueryResponse.chargingStatus && chargingStatusQueryResponse.chargingStatus.length > 0) {
+            return chargingStatusQueryResponse.chargingStatus;
+        }
+    } catch (error) {
+        console.log("Error fetching charging statuses by date range", JSON.stringify(error, null, 2));
     }
+
     return [];
 }
 
@@ -127,12 +132,12 @@ export async function getChargingStatusesByLocation({ location, startDate, endDa
             $lte: endDate
         }
     };
-    
+
     const chargingStatusQueryResponse = await instaServer.query({
         chargingStatus: {
             $: {
                 where: whereClause,
-                orderBy: {
+                order: {
                     statusTime: 'asc'
                 }
             },

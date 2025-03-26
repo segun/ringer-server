@@ -17,7 +17,7 @@ const _schema = i.schema({
       isPluggedIn: i.boolean(),
       userLocation: i.string(),
       manualLocation: i.boolean(),
-      statusTime: i.number()
+      statusTime: i.number().indexed(),
     }),
   },
   links: {
