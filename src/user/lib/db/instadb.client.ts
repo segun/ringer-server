@@ -99,11 +99,11 @@ export async function getChargingStatusesByDateRange({ userId, startDate, endDat
             chargingStatus: {
                 $: {
                     where: {
-                        userId,
-                        statusTime: {
-                            $gte: startDate,
-                            $lte: endDate
-                        }
+                        and: [
+                            {userId: userId},
+                            {statusTime: {$gte: startDate}},
+                            {statusTime: {$lte: endDate}}
+                        ],
                     },
                     order: {
                         statusTime: 'asc'
