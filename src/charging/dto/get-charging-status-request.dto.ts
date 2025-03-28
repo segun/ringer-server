@@ -1,5 +1,5 @@
 export class GetChargingStatusRequest {
-    userId?: string;
+    userId: string;
     location?: string;
     startDate?: number;
     endDate?: number;
