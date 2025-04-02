@@ -20,17 +20,17 @@ export class ChargingService {
     }
 
     async getChargingStatuses({ userId, startDate, endDate }: { userId: string, startDate?: number, endDate?: number }): Promise<ChargingStatus[]> {
-        // Default to last 30 days if no date range is provided
+        // Default to last 7 days if no date range is provided
         const end = endDate || Date.now();
-        const start = startDate || (end - 30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+        const start = startDate || (end - 7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
 
         return await this.dbService.getChargingStatusesByDateRange({ userId, startDate: start, endDate: end });
     }
 
     async getChargingStatusesByLocation({ location, userId, startDate, endDate }: { location: string, userId: string, startDate?: number, endDate?: number }): Promise<ChargingStatus[]> {
-        // Default to last 30 days if no date range is provided
+        // Default to last 7 days if no date range is provided
         const end = endDate || Date.now();
-        const start = startDate || (end - 30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+        const start = startDate || (end - 7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
 
         return await this.dbService.getChargingStatusesByLocation({ location, startDate: start, endDate: end, userId });
     }
